@@ -1,0 +1,19 @@
+{
+  "name": "mineral",
+  "version": "1.0.0",
+  "description": "The Script language for JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dinduks/mineral.git"
+  },
+  "author": "Samy Dindane",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dinduks/mineral/issues"
+  },
+  "homepage": "https://github.com/Dinduks/mineral"
+}
