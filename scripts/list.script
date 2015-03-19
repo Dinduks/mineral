@@ -1,0 +1,16 @@
+fn (size l:
+  if(l == ()
+    0
+    ( n, next = l
+      1 + size(next))))
+
+fn (sum l:
+  if(l == ()
+    0
+    ( n, next = l
+      n + sum(next))))
+
+fn (main:
+  l = {1, {2, {3, ()}}}
+  print(size(l))
+  print(sum(l)))
