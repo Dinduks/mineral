@@ -5,13 +5,12 @@ var fs = require('fs');
 var fileName = process.argv[2];
 
 if (fileName == undefined) {
-    console.error("Please specify a Mineral script.");
+    throw new Error("Please specify a Mineral script.");
 }
 
 fs.readFile(fileName, "utf8", function (error, data) {
     if (error) {
-        console.error("Error while reading the file: " + error);
-        return;
+        throw new Error("Error while reading the file: " + error);
     }
 
     var peg = require("./parser/peg.js");
@@ -21,5 +20,9 @@ fs.readFile(fileName, "utf8", function (error, data) {
 });
 
 function interpret(script) {
+    if (script.main === undefined) {
+        throw new Error("No main function declared.");
+    }
+
     console.log(script);
 }

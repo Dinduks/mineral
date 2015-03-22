@@ -1,10 +1,17 @@
 start
-  = fnDecl+
+  = fns:fnDecl+ {
+    var result = {};
+    for (var i = 0; i < fns.length; i++) {
+      result[fns[i].name] = fns[i];
+    }
+    return result;
+  }
 
 fnDecl
-  = "fn" _ "(" literal ":\n" e:exprs? _ ")" _ {
+  = "fn" _ "(" fnName:literal ":\n" e:exprs? _ ")" _ {
     return {
       type: 'fnDecl',
+      name: fnName,
       expressions: e
     };
   }
