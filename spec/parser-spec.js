@@ -1,6 +1,6 @@
 var peg = require('../parser/peg.js');
 
-describe('parser', function () {
+describe('Parser', function () {
     it('returns a map of functions', function () {
         var r = peg.parse('fn(foo:\nbar())');
         expect(r).toEqual(jasmine.any(Object));
