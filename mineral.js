@@ -14,15 +14,30 @@ fs.readFile(fileName, "utf8", function (error, data) {
     }
 
     var peg = require("./parser/peg.js");
-    var script = peg.parse(data);
+    var functions = peg.parse(data);
 
-    interpret(script);
-});
-
-function interpret(script) {
-    if (script.main === undefined) {
+    if (functions.main === undefined) {
         throw new Error("No main function declared.");
     }
 
-    console.log(script);
+    interpret(functions.main, functions);
+});
+function interpret(expression, functions) {
+    //console.log(expression);
+    //console.log(functions);
+    //
+    switch (expression.type) {
+        case 'fnDecl':
+            interpretFnDecl(expression, functions);
+            break;
+        default:
+            console.warn(("Unknown expression type: " + expression.type));
+            break;
+    }
 }
+
+var interpretFnDecl = function (expression, functions) {
+    expression.body.forEach(function (expression) {
+        interpret(expression, functions);
+    });
+};

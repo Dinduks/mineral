@@ -12,7 +12,7 @@ fnDecl
     return {
       type: 'fnDecl',
       name: fnName,
-      expressions: e
+      body: e
     };
   }
 
@@ -27,17 +27,11 @@ fnCall
 
 fnArgs
   = es:(iw:expr _ "," _ {return iw;})+ e:expr {
-    es = es.push(e);
-    return {
-      type: 'fnArgs',
-      value: es
-    };
+    es.push(e);
+    return es;
   }
   / e:expr {
-    return {
-      type: 'fnArgs',
-      value: e
-    };
+    return e;
   }
 
 expr
@@ -51,10 +45,10 @@ exprs
   }
 
 string
-  = string:"'" (literal/integer/" ")+ "'" {
+  = "'" string:(literal/integer/" ")+ "'" {
     return {
       type: 'string',
-      value: string.substr(1, string.length - 1)
+      value: string.join('')
     };
   }
 
