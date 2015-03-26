@@ -1,6 +1,2 @@
 fn (main:
-  1
-  2
-  'hello'
-  foo('bar')
-  foo(42))
+  print('hello world'))

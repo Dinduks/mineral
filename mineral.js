@@ -23,12 +23,15 @@ fs.readFile(fileName, "utf8", function (error, data) {
     interpret(functions.main, functions);
 });
 function interpret(expression, functions) {
-    //console.log(expression);
-    //console.log(functions);
-    //
     switch (expression.type) {
         case 'fnDecl':
-            interpretFnDecl(expression, functions);
+            return interpretFnDecl(expression, functions);
+            break;
+        case 'fnCall':
+            return interpretFnCall(expression, functions);
+            break;
+        case 'string':
+            return interpretString(expression, functions);
             break;
         default:
             console.warn(("Unknown expression type: " + expression.type));
@@ -40,4 +43,17 @@ var interpretFnDecl = function (expression, functions) {
     expression.body.forEach(function (expression) {
         interpret(expression, functions);
     });
+};
+
+var interpretFnCall = function (expression, functions) {
+    if (expression.target == "print") {
+        console.log(interpret(expression.args));
+        return;
+    }
+
+    throw new Error("Not implemented yet.");
+};
+
+var interpretString = function (expression, functions) {
+    return expression.value;
 };
