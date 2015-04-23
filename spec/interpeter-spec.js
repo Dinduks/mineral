@@ -26,7 +26,7 @@ function runSpecForScript(scriptName, expected) {
 
             waitsFor(function () {
                 return flag;
-            }, "The test timed out.", 1000);
+            }, 'The test for ' + scriptName + ' timed out.', 1000);
 
             runs(function () {
                 expect(output).toEqual(expected);
@@ -35,4 +35,5 @@ function runSpecForScript(scriptName, expected) {
     });
 }
 
-runSpecForScript("test", "hello world\n");
+runSpecForScript("hello", "hello world\n");
+runSpecForScript("bignum", (2 * 123456789123456789) + "\n");

@@ -9,6 +9,9 @@ exports.interpret = function (expression, functions) {
         case 'string':
             return interpretString(expression, functions);
             break;
+        case 'binOp':
+            return interpretBinOp(expression, functions);
+            break;
         default:
             console.warn(("Unknown expression type: " + expression.type));
             break;
@@ -32,4 +35,19 @@ function interpretFnCall(expression, functions) {
 
 function interpretString(expression, functions) {
     return expression.value;
+}
+
+function interpretBinOp(expression, functions) {
+    switch (expression.value.op) {
+        case '+':
+            return expression.value.left.value + expression.value.right.value;
+        case '-':
+            return expression.value.left.value - expression.value.right.value;
+        case '*':
+            return expression.value.left.value * expression.value.right.value;
+        case '/':
+            return expression.value.left.value / expression.value.right.value;
+        default:
+            throw new Error("Unrecognized operation.");
+    }
 }

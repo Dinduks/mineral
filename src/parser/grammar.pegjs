@@ -38,6 +38,37 @@ expr
   = integer
   / string
   / fnCall
+  / additive
+
+additive
+  = left:multiplicative _ "+" _ right:additive {
+    return {
+      type:  'binOp',
+      value: {
+          left:  left,
+          right: right,
+          op: '+'
+      }
+    }
+  }
+  / multiplicative
+
+multiplicative
+  = left:primary _ "*" _ right:multiplicative {
+    return {
+      type:  'binOp',
+      value: {
+          left:  left,
+          right: right,
+          op: '*'
+      }
+    }
+  }
+  / primary
+
+primary
+  = integer
+  / '(' _ additive:additive _ ')' { return additive; }
 
 exprs
   = e:(_ ie:expr {return ie;})+ {
