@@ -1,4 +1,4 @@
-var peg = require('./peg.js');
+var peg = require('../src/parser/peg.js');
 
 describe('Parser', function () {
     it('returns a map of functions', function () {

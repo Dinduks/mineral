@@ -13,8 +13,8 @@ module.exports = function(grunt) {
     },
     peg: {
       example: {
-        src: "parser/grammar.pegjs",
-        dest: "parser/peg.js",
+        src: "src/parser/grammar.pegjs",
+        dest: "src/parser/peg.js",
         options: {
           cache: true
         }

@@ -1,8 +1,38 @@
-var peg = require('../mineral.js');
+var parser = require('../src/parser/parser.js');
 
-describe('Interpreter', function () {
-    it('interprets test.script', function () {
-        var script = parser.parseFile(fileName);
-        interpret(script.main, script);
+// From http://stackoverflow.com/a/15516475/604041
+function commandToString(cmd, args, cb) {
+    var spawn = require('child_process').spawn;
+    var command = spawn(cmd, args);
+    var result = '';
+    command.stdout.on('data', function(data) {
+        result += data.toString();
     });
-});
+    command.on('close', function(code) {
+        cb(result);
+    });
+}
+
+function runSpecForScript(scriptName, expected) {
+    describe('Interpreter', function () {
+        it('correctly interprets ' + scriptName + '.script', function () {
+            runs(function () {
+                flag = false;
+                commandToString('./mineral.js', ['scripts/' + scriptName + '.script'], function(result) {
+                    output = result;
+                    flag = true;
+                });
+            });
+
+            waitsFor(function () {
+                return flag;
+            }, "The test timed out.", 1000);
+
+            runs(function () {
+                expect(output).toEqual(expected);
+            });
+        });
+    });
+}
+
+runSpecForScript("test", "hello world\n");
