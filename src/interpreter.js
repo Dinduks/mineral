@@ -87,6 +87,10 @@ function interpretBinOp(expression, functions, env) {
             return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
         case '<':
             return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
+        case '==':
+            return interpret(expression.left, functions, env) == interpret(expression.right, functions, env);
+        case '!=':
+            return interpret(expression.left, functions, env) != interpret(expression.right, functions, env);
         default:
             throw new Error("Unrecognized operation.");
     }

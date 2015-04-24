@@ -16,13 +16,22 @@ fnDecl
       body: e
     };
   }
-  / "fn" _ "(" fnName:literal _ arg:literal _ ":" _ e:expr _ ")" _ {
+  / "fn" _ "(" fnName:literal _ fnDeclArgs:fnDeclArgs? _ ":" _ e:exprs? _ ")" _ {
     return {
       type: 'fnDecl',
       name: fnName,
-      args: [arg],
-      body: [e]
+      args: fnDeclArgs,
+      body: e
     };
+  }
+
+fnDeclArgs
+  = args:(arg:literal _ "," _ {return arg;})+ arg:literal {
+    args.push(arg);
+    return args;
+  }
+  / arg:literal {
+    return arg;
   }
 
 fnCall
@@ -50,6 +59,7 @@ fnArgs
 
 expr
   = if
+  / while
   / varAssignment
   / test
   / string
@@ -64,6 +74,14 @@ if = 'if' _ '(' _ cond:expr _ truePart:expr _ falsePart:expr _ ')' {
     cond:      cond,
     truePart:  truePart,
     falsePart: falsePart
+  }
+}
+
+while = 'while' _ '(' _ cond:expr _ body:(e:expr _ {return e;})+ ')' {
+  return {
+    type: 'while',
+    cond: cond,
+    body: body
   }
 }
 
@@ -85,7 +103,7 @@ varAssignment
   }
 
 test
-  = left:additive _ op:('<'/'>') _ right:test {
+  = left:additive _ op:('<'/'>'/'=='/'!=') _ right:test {
     return {
       type:  'binOp',
       left:  left,

@@ -8,9 +8,18 @@ describe('Parser', function () {
 
     describe('fnDecl', function () {
         it('contains the name and the body info', function () {
-            var r = peg.parse("fn(foo:\nbar()\n3\n'hello')");
-            expect(r.foo.name).toEqual('foo');
-            expect(r.foo.body.length).toEqual(3);
+            var r1 = peg.parse("fn(foo:\nbar()\n3\n'hello')");
+            expect(r1.foo.name).toEqual('foo');
+            expect(r1.foo.body.length).toEqual(3);
+
+            var r2 = peg.parse("fn(foo a:\n'hello')");
+            expect(r2.foo.args.length).toEqual(1);
+            expect(r2.foo.args[0]).toEqual('a');
+
+            var r3 = peg.parse("fn(foo a, b:\n'hello')");
+            expect(r3.foo.args.length).toEqual(2);
+            expect(r3.foo.args[0]).toEqual('a');
+            expect(r3.foo.args[1]).toEqual('b');
         });
     });
 
@@ -23,12 +32,16 @@ describe('Parser', function () {
         it("contains the arguments info", function () {
             var r1 = peg.parse("fn(foo:\nbar(42, 'hello'))");
             expect(r1.foo.body[0].args).toEqual(jasmine.any(Array));
+            expect(r1.foo.body[0].args[0]).toEqual(jasmine.any(Object));
+            expect(r1.foo.body[0].args[1]).toEqual(jasmine.any(Object));
 
             var r2 = peg.parse("fn(foo:\nbar(42))");
             expect(r2.foo.body[0].args).toEqual(jasmine.any(Array));
+            expect(r2.foo.body[0].args[0]).toEqual(jasmine.any(Object));
 
             var r3 = peg.parse("fn(foo:\nbar())");
             expect(r3.foo.body[0].args).toEqual(jasmine.any(Array));
+            expect(r3.foo.body[0].args[0]).toBeUndefined();
         });
     });
 

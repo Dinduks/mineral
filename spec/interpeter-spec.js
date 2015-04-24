@@ -38,4 +38,6 @@ describe('Interpreter', function () {
     runSpecForScript("bignum", (2 * 123456789123456789) + "\n");
     runSpecForScript("fun", "1\nfoo\n");
     runSpecForScript("fibo", "55\n");
+    runSpecForScript("fibo_empty", "1836311903\n");
+    runSpecForScript("gcd", "3\n");
 });
