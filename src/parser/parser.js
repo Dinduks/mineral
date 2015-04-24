@@ -6,7 +6,7 @@ exports.parseFile = function (fileName) {
     var functions = peg.parse(data);
 
     if (functions.main === undefined) {
-            throw new Error("No main function declared.");
+        throw new Error("No main function declared.");
     }
 
     return functions;

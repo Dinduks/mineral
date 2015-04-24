@@ -14,26 +14,27 @@ function commandToString(cmd, args, cb) {
 }
 
 function runSpecForScript(scriptName, expected) {
-    describe('Interpreter', function () {
-        it('correctly interprets ' + scriptName + '.script', function () {
-            runs(function () {
-                flag = false;
-                commandToString('./mineral.js', ['scripts/' + scriptName + '.script'], function(result) {
-                    output = result;
-                    flag = true;
-                });
+    it('correctly interprets ' + scriptName + '.script', function () {
+        runs(function () {
+            flag = false;
+            commandToString('./mineral.js', ['scripts/' + scriptName + '.script'], function(result) {
+                output = result;
+                flag = true;
             });
+        });
 
-            waitsFor(function () {
-                return flag;
-            }, 'The test for ' + scriptName + ' timed out.', 1000);
+        waitsFor(function () {
+            return flag;
+        }, 'The test for ' + scriptName + ' timed out.', 1000);
 
-            runs(function () {
-                expect(output).toEqual(expected);
-            });
+        runs(function () {
+            expect(output).toEqual(expected);
         });
     });
 }
 
-runSpecForScript("hello", "hello world\n");
-runSpecForScript("bignum", (2 * 123456789123456789) + "\n");
+describe('Interpreter', function () {
+    runSpecForScript("hello", "hello world\n");
+    runSpecForScript("bignum", (2 * 123456789123456789) + "\n");
+    runSpecForScript("fun", "1\nfoo\n");
+});

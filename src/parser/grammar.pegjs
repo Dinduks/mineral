@@ -12,12 +12,26 @@ fnDecl
     return {
       type: 'fnDecl',
       name: fnName,
+      args: [],
       body: e
+    };
+  }
+  / "fn" _ "(" fnName:literal _ arg:literal _ ":" _ e:expr _ ")" _ {
+    return {
+      type: 'fnDecl',
+      name: fnName,
+      args: [arg],
+      body: [e]
     };
   }
 
 fnCall
   = fnName:literal "(" _ fnArgs:fnArgs? _ ")" {
+    if (fnArgs === null) {
+      fnArgs = [];
+    } else if (typeof fnArgs === "object" && !Array.isArray(fnArgs)) {
+      fnArgs = [fnArgs];
+    }
     return {
       type: 'fnCall',
       target: fnName,
@@ -39,16 +53,33 @@ expr
   / string
   / fnCall
   / additive
+  / varAssignment
+  / varAccess
+
+varAccess
+  = varName:literal {
+    return {
+      type: 'varAccess',
+      varName: varName
+    };
+  }
+
+varAssignment
+  = varName:literal _ '=' _ e:expr {
+    return {
+      type:   'varAssignment',
+      varName: varName,
+      e:       e
+    };
+  }
 
 additive
   = left:multiplicative _ "+" _ right:additive {
     return {
       type:  'binOp',
-      value: {
-          left:  left,
-          right: right,
-          op: '+'
-      }
+      left:  left,
+      right: right,
+      op: '+'
     }
   }
   / multiplicative
@@ -57,11 +88,9 @@ multiplicative
   = left:primary _ "*" _ right:multiplicative {
     return {
       type:  'binOp',
-      value: {
-          left:  left,
-          right: right,
-          op: '*'
-      }
+      left:  left,
+      right: right,
+      op: '*'
     }
   }
   / primary

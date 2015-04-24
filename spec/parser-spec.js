@@ -15,11 +15,20 @@ describe('Parser', function () {
     });
 
     describe("fnCall", function () {
-        it("contains the target and the arguments info", function () {
+        it("contains the type and the target", function () {
             var r = peg.parse("fn(foo:\nbar(42, 'hello'))");
             expect(r.foo.body[0].type).toEqual('fnCall');
             expect(r.foo.body[0].target).toEqual('bar');
-            expect(r.foo.body[0].args).toEqual(jasmine.any(Array));
+        });
+        it("contains the arguments info", function () {
+            var r1 = peg.parse("fn(foo:\nbar(42, 'hello'))");
+            expect(r1.foo.body[0].args).toEqual(jasmine.any(Array));
+
+            var r2 = peg.parse("fn(foo:\nbar(42))");
+            expect(r2.foo.body[0].args).toEqual(jasmine.any(Array));
+
+            var r3 = peg.parse("fn(foo:\nbar())");
+            expect(r3.foo.body[0].args).toEqual(jasmine.any(Array));
         });
     });
 
@@ -36,6 +45,23 @@ describe('Parser', function () {
             var r = peg.parse("fn(foo:\n'hello world')");
             expect(r.foo.body[0].type).toEqual('string');
             expect(r.foo.body[0].value).toEqual('hello world');
+        });
+    });
+
+    describe('varAssignment', function () {
+        it('contains the type, the var name as well as the expr', function () {
+            var r = peg.parse("fn(foo:\na = 1)");
+            expect(r.foo.body[0].type).toEqual('varAssignment');
+            expect(r.foo.body[0].varName).toEqual('a');
+            expect(r.foo.body[0].e.type).toEqual('integer');
+        });
+    });
+
+    describe('varAccess', function () {
+        it('contains the type ans the var name', function () {
+            var r = peg.parse("fn(foo:\na)");
+            expect(r.foo.body[0].type).toEqual('varAccess');
+            expect(r.foo.body[0].varName).toEqual('a');
         });
     });
 });
