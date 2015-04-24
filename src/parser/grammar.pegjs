@@ -49,12 +49,23 @@ fnArgs
   }
 
 expr
-  = integer
-  / string
-  / fnCall
-  / additive
+  = if
   / varAssignment
+  / test
+  / string
+  / integer
   / varAccess
+  / fnCall
+
+
+if = 'if' _ '(' _ cond:expr _ truePart:expr _ falsePart:expr _ ')' {
+  return {
+    type:      'if',
+    cond:      cond,
+    truePart:  truePart,
+    falsePart: falsePart
+  }
+}
 
 varAccess
   = varName:literal {
@@ -73,30 +84,43 @@ varAssignment
     };
   }
 
-additive
-  = left:multiplicative _ "+" _ right:additive {
+test
+  = left:additive _ op:('<'/'>') _ right:test {
     return {
       type:  'binOp',
       left:  left,
       right: right,
-      op: '+'
+      op:    op
+    }
+  }
+  / additive
+
+additive
+  = left:multiplicative _ op:('+'/'-') _ right:additive {
+    return {
+      type:  'binOp',
+      left:  left,
+      right: right,
+      op:    op
     }
   }
   / multiplicative
 
 multiplicative
-  = left:primary _ "*" _ right:multiplicative {
+  = left:primary _ op:('*'/'/') _ right:multiplicative {
     return {
       type:  'binOp',
       left:  left,
       right: right,
-      op: '*'
+      op:    op
     }
   }
   / primary
 
 primary
   = integer
+  / fnCall
+  / varAccess
   / '(' _ additive:additive _ ')' { return additive; }
 
 exprs

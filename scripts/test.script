@@ -1,2 +1,4 @@
-fn (main:
-  print('hello world'))
+fn(id x: x + 1)
+
+fn(main:
+  print(id(3) + id(0)))

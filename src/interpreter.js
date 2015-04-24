@@ -9,16 +9,27 @@ var interpret = function (expression, functions, env) {
         case 'integer':
             return interpretInteger(expression, functions);
         case 'binOp':
-            return interpretBinOp(expression, functions);
+            return interpretBinOp(expression, functions, env);
         case 'varAssignment':
             return interpretVarAssignation(expression, functions, env);
         case 'varAccess':
             return interpretVarAccess(expression, functions, env);
+        case 'if':
+            return interpretIf(expression, functions, env);
         default:
             console.warn(("Unknown expression type: " + expression.type));
             break;
     }
 };
+
+function interpretIf(if_, functions, env) {
+    var cond = interpret(if_.cond, functions, env);
+    if (cond == 0 || cond == false) {
+        return interpret(if_.falsePart, functions, merge({}, env));
+    } else {
+        return interpret(if_.truePart, functions, merge({}, env));
+    }
+}
 
 function interpretBody(body, functions, env) {
     var result;
@@ -62,16 +73,20 @@ function interpretInteger(expression, functions) {
     return expression.value;
 }
 
-function interpretBinOp(expression, functions) {
+function interpretBinOp(expression, functions, env) {
     switch (expression.op) {
         case '+':
-            return expression.left.value + expression.right.value;
+            return interpret(expression.left, functions, env) + interpret(expression.right, functions, env);
         case '-':
-            return expression.left.value - expression.right.value;
+            return interpret(expression.left, functions, env) - interpret(expression.right, functions, env);
         case '*':
-            return expression.left.value * expression.right.value;
+            return interpret(expression.left, functions, env) * interpret(expression.right, functions, env);
         case '/':
-            return expression.left.value / expression.right.value;
+            return interpret(expression.left, functions, env) / interpret(expression.right, functions, env);
+        case '>':
+            return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
+        case '<':
+            return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
         default:
             throw new Error("Unrecognized operation.");
     }
