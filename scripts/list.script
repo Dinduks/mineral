@@ -11,6 +11,6 @@ fn (sum l:
       n + sum(next))))
 
 fn (main:
-  l = {1, {2, {3, ()}}}
+  l = {1, 2, 3}
   print(size(l))
   print(sum(l)))

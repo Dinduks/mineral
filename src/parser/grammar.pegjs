@@ -58,8 +58,7 @@ fnArgs
   }
 
 expr
-  =
-  list
+  = list
   / while
   / if
   / varAssignment
@@ -86,19 +85,20 @@ deconstruction
     }
   }
 
-list = l:list_ {
-  return {
-    type:  'list',
-    value: l
+list
+  = '()' {
+   return {
+     type:  'list',
+     value: []
+   }
   }
+  / '{' _ head:expr tail:(_ "," _ expr:expr {return expr;})* _ '}' {
+    tail.unshift(head);
+    return {
+      type:  'list',
+      value: tail
+    }
 }
-
-list_
-  = '()' { return []; }
-  / '{' _ e:expr _ ',' _ l:list_ _ '}' {
-    l.unshift(e);
-    return l;
-  }
 
 if = 'if' _ '(' _ cond:expr _ truePart:expr _ falsePart:expr _ ')' {
   return {
