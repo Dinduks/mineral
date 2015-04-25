@@ -169,8 +169,8 @@ module.exports = (function() {
               value: string.join('')
             };
           },
-        peg$c60 = /^[a-z]/,
-        peg$c61 = { type: "class", value: "[a-z]", description: "[a-z]" },
+        peg$c60 = /^[a-zA-Z]/,
+        peg$c61 = { type: "class", value: "[a-zA-Z]", description: "[a-zA-Z]" },
         peg$c62 = function(text) { return text.join("") },
         peg$c63 = { type: "other", description: "integer" },
         peg$c64 = /^[0-9]/,

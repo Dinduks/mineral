@@ -156,7 +156,7 @@ string
   }
 
 literal
-  = text: [a-z]+ { return text.join("") }
+  = text: [a-zA-Z]+ { return text.join("") }
 
 integer "integer"
   = digits:[0-9]+ {
