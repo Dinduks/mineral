@@ -1,3 +1,5 @@
+var Scope = require('./scope.js');
+
 var evalFn = function (fnName, args, functions) {
     if (fnName == 'print') {
         if (args.length == 0) console.log('null');
@@ -17,7 +19,7 @@ var evalFn = function (fnName, args, functions) {
     }
 
     if (fnDecl == null) throw new Error("No function " + fnName);
-    return eval({type: 'body', value: fnDecl.body}, functions, fnArguments);
+    return eval({type: 'body', value: fnDecl.body}, functions, new Scope(null, fnArguments));
 };
 
 var eval = function (expression, functions, env) {
@@ -48,23 +50,17 @@ var eval = function (expression, functions, env) {
 
 function evalIf(if_, functions, env) {
     var cond = eval(if_.cond, functions, env);
-    var oldVars = Object.keys(env);
     if (cond == 0 || cond == false) {
-        return eval(if_.falsePart, functions, env);
+        return eval(if_.falsePart, functions, new Scope(env));
     } else {
-        return eval(if_.truePart, functions, env);
+        return eval(if_.truePart, functions, new Scope(env));
     }
-    for (var varName in env) if (oldVars.indexOf(varName) < 0) delete(env[varName]);
 }
 
 function evalWhile(while_, functions, env) {
-    var oldVars = Object.keys(env);
-
     while (eval(while_.cond, functions, env) != false) {
-        eval({type: 'body', value: while_.body}, functions, env);
+        eval({type: 'body', value: while_.body}, functions, new Scope(env));
     }
-
-    for (var varName in env) if (oldVars.indexOf(varName) < 0) delete(env[varName]);
 
     return null;
 }
@@ -117,15 +113,15 @@ function evalBinOp(expression, functions, env) {
 }
 
 function evalVarAssignation(expression, functions, env) {
-    env[expression.varName] = eval(expression.e, functions, env);
+    env.setValue(expression.varName, eval(expression.e, functions, env), true);
 }
 
 function evalVarAccess(expression, functions, env) {
-    if (env[expression.varName] == undefined) {
+    if (env.getValue(expression.varName) == undefined) {
         console.log("Variable '" + expression.varName + "' is undefined.");
         process.exit();
     }
-    return env[expression.varName];
+    return env.getValue(expression.varName);
 }
 
 exports.eval = eval;
