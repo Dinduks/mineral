@@ -6,6 +6,10 @@ var evalFn = function (fnName, args, functions) {
     }
 
     var fnDecl = functions[fnName];
+    if (fnDecl == undefined) {
+        console.log("Function '" + fnName + "' is undefined.");
+        process.exit();
+    }
 
     var fnArguments = {};
     for (var i = 0; i < args.length; i++) {
