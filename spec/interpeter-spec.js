@@ -38,7 +38,7 @@ describe('Interpreter', function () {
     runSpecForScript("fibo", "55\n");
     runSpecForScript("fibo_empty", "1836311903\n");
     runSpecForScript("fun", "1\nfoo\n");
-    runSpecForScript("gcd", "3\n");
+    runSpecForScript("gcd", "3\n1\n5\n");
     runSpecForScript("hello", "hello world\n");
     runSpecForScript("while", "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\ndone !\n");
 });

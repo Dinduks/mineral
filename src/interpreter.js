@@ -44,24 +44,23 @@ var interpret = function (expression, functions, env) {
 
 function interpretIf(if_, functions, env) {
     var cond = interpret(if_.cond, functions, env);
+    var oldVars = Object.keys(env);
     if (cond == 0 || cond == false) {
-        return interpret(if_.falsePart, functions, merge({}, env));
+        return interpret(if_.falsePart, functions, env);
     } else {
-        return interpret(if_.truePart, functions, merge({}, env));
+        return interpret(if_.truePart, functions, env);
     }
+    for (var varName in env) if (oldVars.indexOf(varName) < 0) delete(env[varName]);
 }
 
 function interpretWhile(while_, functions, env) {
-    // todo: new env
     var oldVars = Object.keys(env);
 
     while (interpret(while_.cond, functions, env) != false) {
         interpret({type: 'body', value: while_.body}, functions, env);
     }
 
-    for (var varName in env) {
-        if (oldVars.indexOf(varName) < 0) delete(env[varName]);
-    }
+    for (var varName in env) if (oldVars.indexOf(varName) < 0) delete(env[varName]);
 
     return null;
 }
