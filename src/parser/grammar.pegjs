@@ -147,7 +147,8 @@ exprs
   }
 
 string
-  = "'" string:(literal/integer/" ")+ "'" {
+  //= "'" string:(literal/integer/" ")+ "'" {
+  = "'" string:([^'.]*) "'" {
     return {
       type: 'string',
       value: string.join('')

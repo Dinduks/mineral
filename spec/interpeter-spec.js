@@ -34,10 +34,11 @@ function runSpecForScript(scriptName, expected) {
 }
 
 describe('Interpreter', function () {
-    runSpecForScript("hello", "hello world\n");
     runSpecForScript("bignum", (2 * 123456789123456789) + "\n");
-    runSpecForScript("fun", "1\nfoo\n");
     runSpecForScript("fibo", "55\n");
     runSpecForScript("fibo_empty", "1836311903\n");
+    runSpecForScript("fun", "1\nfoo\n");
     runSpecForScript("gcd", "3\n");
+    runSpecForScript("hello", "hello world\n");
+    runSpecForScript("while", "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\ndone !\n");
 });

@@ -1,3 +1,21 @@
+var interpretFn = function (fnName, args, functions) {
+    if (fnName == 'print') {
+        if (args.length == 0) console.log('null');
+        else                  console.log(args.join(','));
+        return;
+    }
+
+    var fnDecl = functions[fnName];
+
+    var fnArguments = {};
+    for (var i = 0; i < args.length; i++) {
+        fnArguments[fnDecl.args[i]] = args[i];
+    }
+
+    if (fnDecl == null) throw new Error("No function " + fnName);
+    return interpret({type: 'body', value: fnDecl.body}, functions, fnArguments);
+};
+
 var interpret = function (expression, functions, env) {
     switch (expression.type) {
         case 'body':
@@ -16,6 +34,8 @@ var interpret = function (expression, functions, env) {
             return interpretVarAccess(expression, functions, env);
         case 'if':
             return interpretIf(expression, functions, env);
+        case 'while':
+            return interpretWhile(expression, functions, env);
         default:
             console.warn(("Unknown expression type: " + expression.type));
             break;
@@ -31,35 +51,32 @@ function interpretIf(if_, functions, env) {
     }
 }
 
+function interpretWhile(while_, functions, env) {
+    // todo: new env
+    var oldVars = Object.keys(env);
+
+    while (interpret(while_.cond, functions, env) != false) {
+        interpret({type: 'body', value: while_.body}, functions, env);
+    }
+
+    for (var varName in env) {
+        if (oldVars.indexOf(varName) < 0) delete(env[varName]);
+    }
+
+    return null;
+}
+
 function interpretBody(body, functions, env) {
     var result;
     body.value.forEach(function (expression) {
-        result = exports.interpret(expression, functions, env);
+        result = interpret(expression, functions, env);
     });
     return result;
 }
 
-var interpretFn = function (fnName, args, functions) {
-    if (fnName == 'print') {
-        if (args.length == 0) console.log('null');
-        else                  console.log(args.join(','));
-        return;
-    }
-
-    var fnDecl = functions[fnName];
-
-    var fnArguments = {};
-    for (var i = 0; i < args.length; i++) {
-        fnArguments[fnDecl.args[i]] = args[i];
-    }
-
-    if (fnDecl == null) throw new Error("No function " + fnName);
-    return exports.interpret({type: 'body', value: fnDecl.body}, functions, fnArguments);
-};
-
 function interpretFnCall(fnCall, functions, env) {
     var args = fnCall.args.map(function (arg) {
-        return exports.interpret(arg, functions, env);
+        return interpret(arg, functions, env);
     });
 
     return interpretFn(fnCall.target, args, functions);
@@ -84,7 +101,7 @@ function interpretBinOp(expression, functions, env) {
         case '/':
             return interpret(expression.left, functions, env) / interpret(expression.right, functions, env);
         case '>':
-            return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
+            return interpret(expression.left, functions, env) > interpret(expression.right, functions, env);
         case '<':
             return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
         case '==':
@@ -97,7 +114,7 @@ function interpretBinOp(expression, functions, env) {
 }
 
 function interpretVarAssignation(expression, functions, env) {
-    env[expression.varName] = exports.interpret(expression.e, functions, env);
+    env[expression.varName] = interpret(expression.e, functions, env);
 }
 
 function interpretVarAccess(expression, functions, env) {

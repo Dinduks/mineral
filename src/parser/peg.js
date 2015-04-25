@@ -161,8 +161,8 @@ module.exports = (function() {
         peg$c54 = function(ie) {return ie;},
         peg$c55 = "'",
         peg$c56 = { type: "literal", value: "'", description: "\"'\"" },
-        peg$c57 = " ",
-        peg$c58 = { type: "literal", value: " ", description: "\" \"" },
+        peg$c57 = /^[^'.]/,
+        peg$c58 = { type: "class", value: "[^'.]", description: "[^'.]" },
         peg$c59 = function(string) {
             return {
               type: 'string',
@@ -1638,38 +1638,22 @@ module.exports = (function() {
       }
       if (s1 !== peg$FAILED) {
         s2 = [];
-        s3 = peg$parseliteral();
-        if (s3 === peg$FAILED) {
-          s3 = peg$parseinteger();
-          if (s3 === peg$FAILED) {
-            if (input.charCodeAt(peg$currPos) === 32) {
-              s3 = peg$c57;
-              peg$currPos++;
-            } else {
-              s3 = peg$FAILED;
-              if (peg$silentFails === 0) { peg$fail(peg$c58); }
-            }
-          }
-        }
-        if (s3 !== peg$FAILED) {
-          while (s3 !== peg$FAILED) {
-            s2.push(s3);
-            s3 = peg$parseliteral();
-            if (s3 === peg$FAILED) {
-              s3 = peg$parseinteger();
-              if (s3 === peg$FAILED) {
-                if (input.charCodeAt(peg$currPos) === 32) {
-                  s3 = peg$c57;
-                  peg$currPos++;
-                } else {
-                  s3 = peg$FAILED;
-                  if (peg$silentFails === 0) { peg$fail(peg$c58); }
-                }
-              }
-            }
-          }
+        if (peg$c57.test(input.charAt(peg$currPos))) {
+          s3 = input.charAt(peg$currPos);
+          peg$currPos++;
         } else {
-          s2 = peg$c1;
+          s3 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$c58); }
+        }
+        while (s3 !== peg$FAILED) {
+          s2.push(s3);
+          if (peg$c57.test(input.charAt(peg$currPos))) {
+            s3 = input.charAt(peg$currPos);
+            peg$currPos++;
+          } else {
+            s3 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$c58); }
+          }
         }
         if (s2 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 39) {
