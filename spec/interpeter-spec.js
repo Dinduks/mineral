@@ -8,6 +8,9 @@ function commandToString(cmd, args, cb) {
     command.stdout.on('data', function(data) {
         result += data.toString();
     });
+    command.stderr.on('data', function(data) {
+        result += data.toString();
+    });
     command.on('close', function(code) {
         cb(result);
     });
@@ -41,6 +44,7 @@ describe('Interpreter', function () {
     runSpecForScript("fun", "1\nfoo\n");
     runSpecForScript("gcd", "3\n1\n5\n");
     runSpecForScript("hello", "hello world\n");
+    runSpecForScript("list", "3\n6\n");
     runSpecForScript("undefined_fun", "Function 'foo' is undefined.\n");
     runSpecForScript("undefined_var", "Variable 'a' is undefined.\n");
     runSpecForScript("while", "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\ndone !\n");

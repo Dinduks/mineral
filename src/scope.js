@@ -1,10 +1,12 @@
+var _     = require('lodash-node');
+
 var Scope = function (parent, arguments) {
     this.scope = {};
 
     if (parent != undefined)
         this.parent = parent;
     if (arguments != undefined)
-        this.scope = merge(this.scope, arguments);
+        this.scope = _.merge(this.scope, arguments);
 
     this.setValue = function (name, value, firstCaller) {
         if (firstCaller == undefined)
@@ -32,22 +34,6 @@ var Scope = function (parent, arguments) {
         }
         return value;
     };
-
-    // From: http://stackoverflow.com/a/8625261/604041
-    function merge() {
-        var obj = {},
-            i = 0,
-            il = arguments.length,
-            key;
-        for (; i < il; i++) {
-            for (key in arguments[i]) {
-                if (arguments[i].hasOwnProperty(key)) {
-                    obj[key] = arguments[i][key];
-                }
-            }
-        }
-        return obj;
-    }
 };
 
 module.exports = Scope;

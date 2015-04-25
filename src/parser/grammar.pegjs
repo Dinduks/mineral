@@ -58,15 +58,47 @@ fnArgs
   }
 
 expr
-  = if
+  =
+  list
   / while
+  / if
   / varAssignment
+  / deconstruction
   / test
   / string
   / integer
   / varAccess
   / fnCall
+  / '(' exprs:(_ e:expr _ {return e;})* ')' {
+    return {
+      type:  'body',
+      value: exprs
+    }
+  }
 
+deconstruction
+  = head:literal tail:(_ ',' _ var_:literal {return var_;})+ _ '=' _ e:expr {
+    tail.unshift(head);
+    return {
+      type: 'deconstruction',
+      vars: tail,
+      e:    e
+    }
+  }
+
+list = l:list_ {
+  return {
+    type:  'list',
+    value: l
+  }
+}
+
+list_
+  = '()' { return []; }
+  / '{' _ e:expr _ ',' _ l:list_ _ '}' {
+    l.unshift(e);
+    return l;
+  }
 
 if = 'if' _ '(' _ cond:expr _ truePart:expr _ falsePart:expr _ ')' {
   return {
@@ -139,6 +171,7 @@ primary
   = integer
   / fnCall
   / varAccess
+  / list
   / '(' _ additive:additive _ ')' { return additive; }
 
 exprs

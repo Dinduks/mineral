@@ -1,4 +1,5 @@
 var Scope = require('./scope.js');
+var _     = require('lodash-node');
 
 var evalFn = function (fnName, args, functions) {
     if (fnName == 'print') {
@@ -9,7 +10,7 @@ var evalFn = function (fnName, args, functions) {
 
     var fnDecl = functions[fnName];
     if (fnDecl == undefined) {
-        console.log("Function '" + fnName + "' is undefined.");
+        console.error("Function '" + fnName + "' is undefined.");
         process.exit();
     }
 
@@ -42,8 +43,13 @@ var eval = function (expression, functions, env) {
             return evalIf(expression, functions, env);
         case 'while':
             return evalWhile(expression, functions, env);
+        case 'list':
+            return evalList(expression, functions, env);
+        case 'deconstruction':
+            return evalDeconstruction(expression, functions, env);
+            break;
         default:
-            console.warn(("Unknown expression type: " + expression.type));
+            console.error(("Unknown expression type: " + expression.type));
             break;
     }
 };
@@ -63,6 +69,23 @@ function evalWhile(while_, functions, env) {
     }
 
     return null;
+}
+
+function evalDeconstruction(decons, functions, env) {
+    var list = eval(decons.e, functions, env);
+    if (!_.isArray(list)) {
+        console.error("Cannot deconstruct a value which is not a list.")
+        process.exit();
+    }
+
+    env.setValue(decons.vars[0], list[0]);
+    env.setValue(decons.vars[1], list.slice(1));
+}
+
+function evalList(list, functions, env) {
+    return list.value.map(function (expr) {
+        return eval(expr, functions, env);
+    });
 }
 
 function evalBody(body, functions, env) {
@@ -104,7 +127,11 @@ function evalBinOp(expression, functions, env) {
         case '<':
             return eval(expression.left, functions, env) < eval(expression.right, functions, env);
         case '==':
-            return eval(expression.left, functions, env) == eval(expression.right, functions, env);
+            var left  = eval(expression.left, functions, env);
+            var right = eval(expression.right, functions, env);
+            if (_.isArray(left) && _.isArray(right))
+                return (_(left).difference(right) == 0);
+            return left == right;
         case '!=':
             return eval(expression.left, functions, env) != eval(expression.right, functions, env);
         default:
@@ -118,7 +145,7 @@ function evalVarAssignation(expression, functions, env) {
 
 function evalVarAccess(expression, functions, env) {
     if (env.getValue(expression.varName) == undefined) {
-        console.log("Variable '" + expression.varName + "' is undefined.");
+        console.error("Variable '" + expression.varName + "' is undefined.");
         process.exit();
     }
     return env.getValue(expression.varName);
