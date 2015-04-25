@@ -1,4 +1,4 @@
-var interpretFn = function (fnName, args, functions) {
+var evalFn = function (fnName, args, functions) {
     if (fnName == 'print') {
         if (args.length == 0) console.log('null');
         else                  console.log(args.join(','));
@@ -13,51 +13,51 @@ var interpretFn = function (fnName, args, functions) {
     }
 
     if (fnDecl == null) throw new Error("No function " + fnName);
-    return interpret({type: 'body', value: fnDecl.body}, functions, fnArguments);
+    return eval({type: 'body', value: fnDecl.body}, functions, fnArguments);
 };
 
-var interpret = function (expression, functions, env) {
+var eval = function (expression, functions, env) {
     switch (expression.type) {
         case 'body':
-            return interpretBody(expression, functions, env);
+            return evalBody(expression, functions, env);
         case 'fnCall':
-            return interpretFnCall(expression, functions, env);
+            return evalFnCall(expression, functions, env);
         case 'string':
-            return interpretString(expression, functions);
+            return evalString(expression, functions);
         case 'integer':
-            return interpretInteger(expression, functions);
+            return evalInteger(expression, functions);
         case 'binOp':
-            return interpretBinOp(expression, functions, env);
+            return evalBinOp(expression, functions, env);
         case 'varAssignment':
-            return interpretVarAssignation(expression, functions, env);
+            return evalVarAssignation(expression, functions, env);
         case 'varAccess':
-            return interpretVarAccess(expression, functions, env);
+            return evalVarAccess(expression, functions, env);
         case 'if':
-            return interpretIf(expression, functions, env);
+            return evalIf(expression, functions, env);
         case 'while':
-            return interpretWhile(expression, functions, env);
+            return evalWhile(expression, functions, env);
         default:
             console.warn(("Unknown expression type: " + expression.type));
             break;
     }
 };
 
-function interpretIf(if_, functions, env) {
-    var cond = interpret(if_.cond, functions, env);
+function evalIf(if_, functions, env) {
+    var cond = eval(if_.cond, functions, env);
     var oldVars = Object.keys(env);
     if (cond == 0 || cond == false) {
-        return interpret(if_.falsePart, functions, env);
+        return eval(if_.falsePart, functions, env);
     } else {
-        return interpret(if_.truePart, functions, env);
+        return eval(if_.truePart, functions, env);
     }
     for (var varName in env) if (oldVars.indexOf(varName) < 0) delete(env[varName]);
 }
 
-function interpretWhile(while_, functions, env) {
+function evalWhile(while_, functions, env) {
     var oldVars = Object.keys(env);
 
-    while (interpret(while_.cond, functions, env) != false) {
-        interpret({type: 'body', value: while_.body}, functions, env);
+    while (eval(while_.cond, functions, env) != false) {
+        eval({type: 'body', value: while_.body}, functions, env);
     }
 
     for (var varName in env) if (oldVars.indexOf(varName) < 0) delete(env[varName]);
@@ -65,60 +65,60 @@ function interpretWhile(while_, functions, env) {
     return null;
 }
 
-function interpretBody(body, functions, env) {
+function evalBody(body, functions, env) {
     var result;
     body.value.forEach(function (expression) {
-        result = interpret(expression, functions, env);
+        result = eval(expression, functions, env);
     });
     return result;
 }
 
-function interpretFnCall(fnCall, functions, env) {
+function evalFnCall(fnCall, functions, env) {
     var args = fnCall.args.map(function (arg) {
-        return interpret(arg, functions, env);
+        return eval(arg, functions, env);
     });
 
-    return interpretFn(fnCall.target, args, functions);
+    return evalFn(fnCall.target, args, functions);
 }
 
-function interpretString(expression, functions) {
+function evalString(expression, functions) {
     return expression.value;
 }
 
-function interpretInteger(expression, functions) {
+function evalInteger(expression, functions) {
     return expression.value;
 }
 
-function interpretBinOp(expression, functions, env) {
+function evalBinOp(expression, functions, env) {
     switch (expression.op) {
         case '+':
-            return interpret(expression.left, functions, env) + interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) + eval(expression.right, functions, env);
         case '-':
-            return interpret(expression.left, functions, env) - interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) - eval(expression.right, functions, env);
         case '*':
-            return interpret(expression.left, functions, env) * interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) * eval(expression.right, functions, env);
         case '/':
-            return interpret(expression.left, functions, env) / interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) / eval(expression.right, functions, env);
         case '>':
-            return interpret(expression.left, functions, env) > interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) > eval(expression.right, functions, env);
         case '<':
-            return interpret(expression.left, functions, env) < interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) < eval(expression.right, functions, env);
         case '==':
-            return interpret(expression.left, functions, env) == interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) == eval(expression.right, functions, env);
         case '!=':
-            return interpret(expression.left, functions, env) != interpret(expression.right, functions, env);
+            return eval(expression.left, functions, env) != eval(expression.right, functions, env);
         default:
             throw new Error("Unrecognized operation.");
     }
 }
 
-function interpretVarAssignation(expression, functions, env) {
-    env[expression.varName] = interpret(expression.e, functions, env);
+function evalVarAssignation(expression, functions, env) {
+    env[expression.varName] = eval(expression.e, functions, env);
 }
 
-function interpretVarAccess(expression, functions, env) {
+function evalVarAccess(expression, functions, env) {
     return env[expression.varName];
 }
 
-exports.interpret = interpret;
-exports.interpretFn = interpretFn;
+exports.eval = eval;
+exports.evalFn = evalFn;

@@ -9,4 +9,4 @@ if (fileName == undefined) {
 }
 
 var script = parser.parseFile(fileName);
-interpreter.interpretFn('main', [], script);
+interpreter.evalFn('main', [], script);
