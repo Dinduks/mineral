@@ -8,7 +8,7 @@ start
   }
 
 fnDecl
-  = "fn" _ "(" fnName:literal ":\n" e:exprs? _ ")" _ {
+  = _ "fn" _ "(" fnName:literal ":\n" e:exprs? _ ")" _ {
     return {
       type: 'fnDecl',
       name: fnName,
@@ -16,7 +16,7 @@ fnDecl
       body: e
     };
   }
-  / "fn" _ "(" fnName:literal _ fnDeclArgs:fnDeclArgs? _ ":" _ e:exprs? _ ")" _ {
+  / _ "fn" _ "(" fnName:literal _ fnDeclArgs:fnDeclArgs? _ ":" _ e:exprs? _ ")" _ {
     return {
       type: 'fnDecl',
       name: fnName,
@@ -35,7 +35,7 @@ fnDeclArgs
   }
 
 fnCall
-  = fnName:literal "(" _ fnArgs:fnArgs? _ ")" {
+  = fnName:literal _ '(' _ fnArgs:fnArgs? _ ')' {
     if (fnArgs === null) {
       fnArgs = [];
     } else if (typeof fnArgs === "object" && !Array.isArray(fnArgs)) {

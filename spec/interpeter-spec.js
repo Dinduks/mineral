@@ -48,4 +48,5 @@ describe('Interpreter', function () {
     runSpecForScript("undefined_fun", "Function 'foo' is undefined.\n");
     runSpecForScript("undefined_var", "Variable 'a' is undefined.\n");
     runSpecForScript("while", "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\ndone !\n");
+    runSpecForScript("whitespaces", "hello\n");
 });
