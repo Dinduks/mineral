@@ -76,12 +76,12 @@ expr
   }
 
 deconstruction
-  = head:literal tail:(_ ',' _ var_:literal {return var_;})+ _ '=' _ e:expr {
-    tail.unshift(head);
+  = head:literal _ ',' _ tail:literal _ '=' _ e:expr {
     return {
-      type: 'deconstruction',
-      vars: tail,
-      e:    e
+      type:  'deconstruction',
+      head:  head,
+      tail:  tail,
+      value: e
     }
   }
 

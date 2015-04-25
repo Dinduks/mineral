@@ -72,14 +72,14 @@ function evalWhile(while_, functions, env) {
 }
 
 function evalDeconstruction(decons, functions, env) {
-    var list = eval(decons.e, functions, env);
+    var list = eval(decons.value, functions, env);
     if (!_.isArray(list)) {
         console.error("Cannot deconstruct a value which is not a list.")
         process.exit();
     }
 
-    env.setValue(decons.vars[0], list[0]);
-    env.setValue(decons.vars[1], list.slice(1));
+    env.setValue(decons.head, list[0]);
+    env.setValue(decons.tail, list.slice(1));
 }
 
 function evalList(list, functions, env) {
