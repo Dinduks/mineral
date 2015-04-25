@@ -120,21 +120,5 @@ function interpretVarAccess(expression, functions, env) {
     return env[expression.varName];
 }
 
-// From: http://stackoverflow.com/a/8625261/604041
-var merge = function() {
-    var obj = {},
-    i = 0,
-    il = arguments.length,
-    key;
-    for (; i < il; i++) {
-        for (key in arguments[i]) {
-            if (arguments[i].hasOwnProperty(key)) {
-                obj[key] = arguments[i][key];
-            }
-        }
-    }
-    return obj;
-};
-
 exports.interpret = interpret;
 exports.interpretFn = interpretFn;
