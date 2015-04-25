@@ -117,6 +117,10 @@ function evalVarAssignation(expression, functions, env) {
 }
 
 function evalVarAccess(expression, functions, env) {
+    if (env[expression.varName] == undefined) {
+        console.log("Variable '" + expression.varName + "' is undefined.");
+        process.exit();
+    }
     return env[expression.varName];
 }
 
