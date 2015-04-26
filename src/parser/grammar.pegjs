@@ -203,8 +203,11 @@ integer "integer"
     };
   }
 
+lb = [\n\r]
+comment = "#" (!lb .)*
+
 // optional whitespace
-_  = [ \t\r\n]*
+_  = ([ \t\r\n]/comment)*
 
 // mandatory whitespace
 __ = [ \t\r\n]+

@@ -1,0 +1,14 @@
+# this is a commentj
+fn (gcd a, b:    # this is a comment
+  while (a != b    # this is a comment
+    if (a > b    # this is a comment
+      a = a - b    # this is a comment
+      b = b - a))    # this is a comment
+  a)    # this is a comment
+    # this is a comment
+fn (main:    # this is a comment
+  print(gcd(3, 9))    # this is a comment
+  print(gcd(1, 1))    # this is a comment
+  print(gcd(5, 15))    # this is a comment
+)    # this is a comment
+# this is a comment

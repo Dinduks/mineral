@@ -38,6 +38,7 @@ function runSpecForScript(scriptName, expected) {
 
 describe('Interpreter', function () {
     runSpecForScript("bignum", (2 * 123456789123456789) + "\n");
+    runSpecForScript("comments", "3\n1\n5\n");
     runSpecForScript("fact", "120\n");
     runSpecForScript("fibo", "55\n");
     runSpecForScript("fibo_empty", "1836311903\n");
