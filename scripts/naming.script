@@ -1,0 +1,5 @@
+fn (identity123abc x: x)
+
+fn (main:
+  text666 = 'hello'
+  print(identity123abc(text666)))

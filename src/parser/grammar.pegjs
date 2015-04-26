@@ -8,7 +8,7 @@ start
   }
 
 fnDecl
-  = _ "fn" _ "(" fnName:literal ":\n" e:exprs? _ ")" _ {
+  = _ "fn" _ "(" fnName:identifier ":\n" e:exprs? _ ")" _ {
     return {
       type: 'fnDecl',
       name: fnName,
@@ -16,7 +16,7 @@ fnDecl
       body: e
     };
   }
-  / _ "fn" _ "(" fnName:literal _ fnDeclArgs:fnDeclArgs? _ ":" _ e:exprs? _ ")" _ {
+  / _ "fn" _ "(" fnName:identifier _ fnDeclArgs:fnDeclArgs? _ ":" _ e:exprs? _ ")" _ {
     return {
       type: 'fnDecl',
       name: fnName,
@@ -35,7 +35,7 @@ fnDeclArgs
   }
 
 fnCall
-  = fnName:literal _ '(' _ fnArgs:fnArgs? _ ')' {
+  = fnName:identifier _ '(' _ fnArgs:fnArgs? _ ')' {
     if (fnArgs === null) {
       fnArgs = [];
     } else if (typeof fnArgs === "object" && !Array.isArray(fnArgs)) {
@@ -68,7 +68,7 @@ expr
   / integer
   / varAccess
   / fnCall
-  / '(' exprs:(_ e:expr _ {return e;})* ')' {
+  / '(' exprs:exprs ')' {
     return {
       type:  'body',
       value: exprs
@@ -118,7 +118,7 @@ while = 'while' _ '(' _ cond:expr _ body:(e:expr _ {return e;})+ ')' {
 }
 
 varAccess
-  = varName:literal {
+  = varName:identifier {
     return {
       type: 'varAccess',
       varName: varName
@@ -126,7 +126,7 @@ varAccess
   }
 
 varAssignment
-  = varName:literal _ '=' _ e:expr {
+  = varName:identifier _ '=' _ e:expr {
     return {
       type:   'varAssignment',
       varName: varName,
@@ -178,6 +178,10 @@ exprs
   = e:(_ ie:expr {return ie;})+ {
     return e;
   }
+
+identifier = p1:literal pN:(p:literal/p:integer {return p.value;})* {
+  return p1 + pN;
+}
 
 string
   //= "'" string:(literal/integer/" ")+ "'" {
