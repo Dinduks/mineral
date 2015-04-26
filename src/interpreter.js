@@ -4,7 +4,7 @@ var _     = require('lodash-node');
 var evalFn = function (fnName, args, functions) {
     if (fnName == 'print') {
         if (args.length == 0) console.log('null');
-        else                  console.log(args.join(','));
+        else                  console.log(args.join(', '));
         return;
     }
 

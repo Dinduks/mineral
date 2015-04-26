@@ -42,7 +42,7 @@ describe('Interpreter', function () {
     runSpecForScript("fact", "120\n");
     runSpecForScript("fibo", "55\n");
     runSpecForScript("fibo_empty", "1836311903\n");
-    runSpecForScript("fun", "1\nfoo\n");
+    runSpecForScript("fun", "1, foo, c\n");
     runSpecForScript("gcd", "3\n1\n5\n");
     runSpecForScript("hello", "hello world\n");
     runSpecForScript("list", "3\n6\n");
