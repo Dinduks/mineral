@@ -1,3 +1,4 @@
+var interpreter = require('../src/interpreter.js');
 var parser = require('../src/parser/parser.js');
 
 // From http://stackoverflow.com/a/15516475/604041
@@ -18,21 +19,13 @@ function commandToString(cmd, args, cb) {
 
 function runSpecForScript(scriptName, expected) {
     it('correctly interprets ' + scriptName + '.script', function () {
-        runs(function () {
-            flag = false;
-            commandToString('./mineral.js', ['scripts/' + scriptName + '.script'], function(result) {
-                output = result;
-                flag = true;
-            });
-        });
+        var output = "";
+        function out(s) { output += s + '\n'; }
 
-        waitsFor(function () {
-            return flag;
-        }, 'The test for ' + scriptName + ' timed out.', 1000);
+        var script = parser.parseFile('scripts/' + scriptName + '.script');
+        interpreter.evalFn('main', [], script, out, out);
 
-        runs(function () {
-            expect(output).toEqual(expected);
-        });
+        expect(output).toEqual(expected);
     });
 }
 
@@ -48,7 +41,7 @@ describe('Interpreter', function () {
     runSpecForScript("list", "3\n6\n");
     runSpecForScript("naming", "hello\n");
     runSpecForScript("undefined_fun", "Function 'foo' is undefined.\n");
-    runSpecForScript("undefined_var", "Variable 'a' is undefined.\n");
+    runSpecForScript("undefined_var", "Variable 'a' is undefined.\n\n");
     runSpecForScript("while", "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\ndone !\n");
     runSpecForScript("whitespaces", "hello\n");
 });
