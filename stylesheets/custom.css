@@ -1,0 +1,32 @@
+header {
+  float: none;
+  position: static;
+}
+
+section {
+  float: none;
+  width: 100%;
+}
+
+footer {
+  float: none;
+  position: static;
+}
+
+#left {
+  padding: 1%;
+  min-width: 48%;
+  float: left;
+}
+
+#right {
+  padding: 1%;
+  min-width: 48%;
+  float: right;
+}
+
+textarea {
+  padding: 5% 1% 5% 1%;
+  min-width: 98%;
+  height: 50%;
+}
