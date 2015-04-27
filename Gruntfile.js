@@ -20,10 +20,19 @@ module.exports = function(grunt) {
         }
       }
     }
+    ,
+    browserify: {
+      dist: {
+        files: {
+          'javascripts/bundle.js': ['src/client.js']
+        }
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-peg');
   grunt.loadNpmTasks('grunt-jasmine-node');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('specs', ['peg', 'jasmine_node']);
   grunt.registerTask('default', ['specs']);
