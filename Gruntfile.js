@@ -24,7 +24,12 @@ module.exports = function(grunt) {
     browserify: {
       dist: {
         files: {
-          'javascripts/mineral.js': ['src/interpreter.js', 'src/scope.js', 'src/parser/parser.js']
+          'javascripts/mineral.js': [
+            'src/interpreter.js',
+            'src/scope.js',
+            'src/parser/parser.js'
+          ],
+          'javascripts/custom.js': ['examples/custom.js']
         }
         /*
         ,

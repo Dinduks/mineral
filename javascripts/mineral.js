@@ -12301,8 +12301,6 @@ function evalWhile(while_, functions, scope, out, err) {
     return;
 }
 
-console.log('fuck this shit');
-
 },{"./scope.js":6,"lodash-node":2}],4:[function(require,module,exports){
 var fs  = require('fs');
 var peg = require("./peg.js");
