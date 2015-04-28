@@ -20,10 +20,25 @@ module.exports = function(grunt) {
         }
       }
     }
+    ,
+    browserify: {
+      dist: {
+        files: {
+          'javascripts/mineral.js': ['src/interpreter.js', 'src/scope.js', 'src/parser/parser.js']
+        }
+        /*
+        ,
+        options: {
+          //transform: ['coffeeify']
+        }
+        */
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-peg');
   grunt.loadNpmTasks('grunt-jasmine-node');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('specs', ['peg', 'jasmine_node']);
   grunt.registerTask('default', ['specs']);
