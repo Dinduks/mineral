@@ -17,15 +17,19 @@ function commandToString(cmd, args, cb) {
     });
 }
 
-function runSpecForScript(scriptName, expected) {
+function runSpecForScript(scriptName, expected, throws) {
     it('correctly interprets ' + scriptName + '.script', function () {
-        var output = "";
-        function out(s) { output += s + '\n'; }
-
         var script = parser.parseFile('scripts/' + scriptName + '.script');
-        interpreter.evalFn('main', [], script, out, out);
+        var eval   = function (out) { interpreter.evalFn('main', [], script, out) };
 
-        expect(output).toEqual(expected);
+        if (throws) {
+            expect(eval).toThrow(expected);
+        } else {
+            var output = "";
+            function out(s) { output += s + '\n'; }
+            eval(out);
+            expect(output).toEqual(expected);
+        }
     });
 }
 
@@ -40,8 +44,8 @@ describe('Interpreter', function () {
     runSpecForScript("hello", "hello world\n");
     runSpecForScript("list", "3\n6\n");
     runSpecForScript("naming", "hello\n");
-    runSpecForScript("undefined_fun", "Function 'foo' is undefined.\n");
-    runSpecForScript("undefined_var", "Variable 'a' is undefined.\n\n");
+    runSpecForScript("undefined_fun", "Function 'foo' is undefined.", true);
+    runSpecForScript("undefined_var", "Variable 'a' is undefined.", true);
     runSpecForScript("while", "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\ndone !\n");
     runSpecForScript("whitespaces", "hello\n");
 });
