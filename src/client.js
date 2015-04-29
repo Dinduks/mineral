@@ -17,14 +17,13 @@
     });
 
     function out(s) {
-        if (s == '') return;
         $result.css('color', 'black');
         $result.val($result.val() + s + '\n');
     }
 
     function err(s) {
         $result.css('color', 'red');
-        var err = 'Error: ' + s + '\n';
+        var err = s + '\n';
         $result.val(err);
     }
 
