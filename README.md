@@ -18,3 +18,7 @@ grunt
 ```
 ./mineral.js <file>
 ```
+
+## The name
+It is named after [Atheist's song by the same name](https://www.youtube.com/watch?v=q0mq1_OAekA).
+If you've never heard Jazzy Death Metal, now it's the time. :)
