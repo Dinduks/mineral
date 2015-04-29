@@ -1,5 +1,5 @@
 fn (size l:
-  if(l == ()
+  if(l == {}
     0
     ( n, next = l
       1 + size(next))))

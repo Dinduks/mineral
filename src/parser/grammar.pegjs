@@ -86,7 +86,7 @@ deconstruction
   }
 
 list
-  = '()' {
+  = ('()'/'{}') {
    return {
      type:  'list',
      value: []
